@@ -1,3 +1,18 @@
-body{
-  background: red;
+.container{
+  display: flex;
+  flex-direction: column;
+}
+thead{
+  background:#ccc;
+  color:#333;
+  th{
+    padding:10px;
+  }
+}
+
+tbody{
+  td{
+    text-align: center;
+    color:#333;
+  }
 }

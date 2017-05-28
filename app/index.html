@@ -1,10 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>KickStarter</title>
+  <title>Máquina de Norma</title>
   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 <body>
+<div class="container">
 
+  <header>
+    <h1>Norma Machine</h1>
+  </header>
+
+  <nav>
+    nA: <input type="text" name="A" id="nA" value="0"/><br>
+    nB: <input type="text" name="B" id="nB" value="0" /><br>
+    <button id="zeroA">Zero A</button>
+    <button id="setA">Set A</button>
+    <button id="setB">Set B</button>
+
+  </nav>
+  <h2>Current value of registers</h2>
+  <table>
+    <thead>
+      <th>Register A</th>
+      <th>Register B</th>
+      <th>Register C</th>
+      <th>Register D</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Step-by-step</h2>
+  <table>
+    <thead>
+      <th>Register A</th>
+      <th>Register B</th>
+      <th>Register C</th>
+      <th>Register D</th>
+    </thead>
+    <tbody id="steps"></tbody>
+  </table>
+</div>
+<script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+  function NormaMachine() {
+    this.A = 0;
+    this.B = 0;
+    this.C = 0;
+    this.D = 0;
+
+    this.setA = function(nA) {
+      var register = parseInt(nA);
+      $('#steps').html('');
+      this.printStep();
+      while(!this.isZero(register)){
+        this.increment(this.A);
+        this.decrement(register);
+        this.printStep();
+      }
+    };
+
+    this.setB = function(nB) {
+      var register = parseInt(nB);
+      $('#steps').html('');
+      this.printStep();
+      while(!this.isZero(register)){
+        this.increment(this.B);
+        this.decrement(register);
+        this.printStep();
+      }
+    };
+
+    this.increment = function(register){
+      register += 1;
+    };
+
+    this.decrement = function(register){
+      register -= 1;
+    };
+
+    this.isZero = function(register){
+      if(register == 0) return true;
+      else return false;
+    };
+
+    this.printStep = function(){
+      var html = `
+        <tr>
+          <td>`+this.A+`</td>
+          <td>`+this.B+`</td>
+          <td>`+this.C+`</td>
+          <td>`+this.D+`</td>
+        </tr>
+      `;
+      $('#steps').append(html);
+    };
+  }
+
+  var m = new NormaMachine();
+  
+  $('#setA').click(function(){
+    m.setA($('#nA').val());
+  });
+
+  $('#zeroA').click(function(){
+    m.zeroA();
+  });
+
+</script>
 </body>
 </html>
