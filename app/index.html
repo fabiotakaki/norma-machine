@@ -9,6 +9,7 @@
 
   <header>
     <h1>Norma Machine</h1>
+    <h3>Fábio da Silva Takaki</h3>
   </header>
 
   <nav>
@@ -17,6 +18,10 @@
     <button id="zeroA">Zero A</button>
     <button id="setA">Set A</button>
     <button id="setB">Set B</button>
+    <button id="sumAB">Soma A e B</button>
+    <button id="sumABC">Soma A e B usando C</button>
+    <button id="setAwithC">Atribuição B em A usando C</button>
+    <button id="multiplyAB">Multiplicação A e B usando C e D</button>
 
   </nav>
   <h2>Current value of registers</h2>
@@ -27,7 +32,7 @@
       <th>Register C</th>
       <th>Register D</th>
     </thead>
-    <tbody>
+    <tbody id="current">
       <tr>
         <td>0</td>
         <td>0</td>
@@ -56,20 +61,21 @@
     this.increment = function(){
       this.value += 1;
     }
+
     this.decrement = function(){
       this.value -= 1;
     }
+
     this.getValue = function(){
       return this.value;
     }
+
     this.isZero = function(){
       if(this.value == 0){
         return 1;
       }
       else return 0;
     }
-
-
   }
 
   function NormaMachine() {
@@ -78,27 +84,213 @@
     this.C = new registerNM(0);
     this.D = new registerNM(0);
 
-    this.setA = function(nA) {
-      var register = new registerNM(parseInt(nA));
+    this.zeroA = function(){
       $('#steps').html('');
       this.printStep();
-      while(!register.isZero()){
-        this.A.increment();
-        register.decrement();
+      while(!this.A.isZero()){
+        this.A.decrement();
         this.printStep();
       }
+      this.printCurrent();
+    }
+
+    this.zeroB = function(){
+      $('#steps').html('');
+      this.printStep();
+      while(!this.B.isZero()){
+        this.B.decrement();
+        this.printStep();
+      }
+      this.printCurrent();
+    }
+
+    this.zeroC = function(){
+      $('#steps').html('');
+      this.printStep();
+      while(!this.C.isZero()){
+        this.C.decrement();
+        this.printStep();
+      }
+      this.printCurrent();
+    }
+
+    this.setA = function(nA) {
+      var register = new registerNM(parseInt(nA));
+
+      // se não for zero eu zero primeiro antes de atribuir
+      if(!this.A.isZero()){
+        
+        this.zeroA();
+
+        while(!register.isZero()){
+          this.A.increment();
+          register.decrement();
+          this.printStep();
+        }
+      }else{
+        $('#steps').html('');
+        this.printStep();
+        while(!register.isZero()){
+          this.A.increment();
+          register.decrement();
+          this.printStep();
+        }
+      }
+      this.printCurrent();
     };
 
     this.setB = function(nB) {
       var register = new registerNM(parseInt(nB));
+
+      // se não for zero eu zero primeiro antes de atribuir
+      if(!this.B.isZero()){
+        this.zeroB();
+
+        while(!register.isZero()){
+          this.B.increment();
+          register.decrement();
+          this.printStep();
+        }
+      }else{
+        $('#steps').html('');
+        this.printStep();
+        while(!register.isZero()){
+          this.B.increment();
+          register.decrement();
+          this.printStep();
+        }
+      }
+      this.printCurrent();
+    };
+
+    this.sumAB = function(){
       $('#steps').html('');
       this.printStep();
-      while(!register.isZero()){
-        this.B.increment();
-        register.decrement();
+      while(!this.B.isZero()){
+        this.A.increment();
+        this.B.decrement();
         this.printStep();
       }
-    };
+      this.printCurrent();
+    }
+
+    this.sumABC = function(){
+      // se não for zero eu zero primeiro
+      if(!this.C.isZero()){
+        this.zeroC();
+
+        while(!this.B.isZero()){
+          this.A.increment();
+          this.C.increment();
+          this.B.decrement();
+          this.printStep();
+        }
+
+        while(!this.C.isZero()){
+          this.B.increment();
+          this.C.decrement();
+          this.printStep();
+        }
+      }else{
+        $('#steps').html('');
+        this.printStep();
+        while(!this.B.isZero()){
+          this.A.increment();
+          this.C.increment();
+          this.B.decrement();
+          this.printStep();
+        }
+        while(!this.C.isZero()){
+          this.B.increment();
+          this.C.decrement();
+          this.printStep();
+        }
+      }
+      this.printCurrent();
+    }
+
+    this.sumABD = function(){
+      // se não for zero eu zero primeiro
+      if(!this.D.isZero()){
+        this.zeroD();
+
+        while(!this.B.isZero()){
+          this.A.increment();
+          this.D.increment();
+          this.B.decrement();
+          this.printStep();
+        }
+
+        while(!this.D.isZero()){
+          this.B.increment();
+          this.D.decrement();
+          this.printStep();
+        }
+      }else{
+        $('#steps').html('');
+        this.printStep();
+        while(!this.B.isZero()){
+          this.A.increment();
+          this.D.increment();
+          this.B.decrement();
+          this.printStep();
+        }
+        while(!this.D.isZero()){
+          this.B.increment();
+          this.D.decrement();
+          this.printStep();
+        }
+      }
+      this.printCurrent();
+    }
+
+    this.setAwithC = function(){
+      this.zeroA();
+      while(!this.B.isZero()){
+        this.A.increment();
+        this.B.decrement();
+        this.D.increment();
+        this.printStep();
+      }
+      while(!this.D.isZero()){
+        $('#steps').html('');
+        this.printStep();
+        this.B.increment();
+        this.D.decrement();
+        this.printStep();
+      }
+      this.printCurrent();
+    }
+
+    this.multiplyAB = function(){
+      if(this.C.getValue != 0){
+        this.zeroC();
+        while(!this.A.isZero()){
+          this.A.decrement();
+          this.C.increment();
+          this.printStep();
+        }
+
+        while(!this.C.isZero()){
+          this.sumABD();
+          this.C.decrement();
+          this.printStep();
+        }
+      }else{
+        while(!this.A.isZero()){
+          this.A.decrement();
+          this.C.increment();
+          this.printStep();
+        }
+
+        while(!this.C.isZero()){
+          this.sumABD();
+          this.C.decrement();
+          this.printStep();
+        }
+      }
+      this.printCurrent();
+    }
 
     this.printStep = function(){
       var html = `
@@ -111,12 +303,48 @@
       `;
       $('#steps').append(html);
     };
+
+    this.printCurrent = function(){
+      var html = `
+        <tr>
+          <td>`+this.A.getValue()+`</td>
+          <td>`+this.B.getValue()+`</td>
+          <td>`+this.C.getValue()+`</td>
+          <td>`+this.D.getValue()+`</td>
+        </tr>
+      `;
+      $('#current').html(html);
+    };
   }
 
   var m = new NormaMachine();
   
   $('#setA').click(function(){
     m.setA($('#nA').val());
+  });
+
+  $('#setB').click(function(){
+    m.setB($('#nB').val());
+  });
+
+  $('#zeroA').click(function(){
+    m.zeroA();
+  });
+
+  $('#sumAB').click(function(){
+    m.sumAB();
+  });
+
+  $('#sumABC').click(function(){
+    m.sumABC();
+  });
+
+  $('#setAwithC').click(function(){
+    m.setAwithC();
+  });
+
+  $('#multiplyAB').click(function(){
+    m.multiplyAB();
   });
 
 </script>
